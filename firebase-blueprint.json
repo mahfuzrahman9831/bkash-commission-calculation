@@ -1,0 +1,96 @@
+{
+  "entities": {
+    "Partner": {
+      "title": "Partner",
+      "description": "A business partner with direct commission rate presets.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "uid": { "type": "string", "description": "The user ID of the owner." },
+        "name": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "rates": {
+          "type": "object",
+          "properties": {
+            "bKashPersonal": { "type": "number" },
+            "bKashAgent": { "type": "number" },
+            "NagadPersonal": { "type": "number" },
+            "NagadAgent": { "type": "number" }
+          }
+        }
+      },
+      "required": ["id", "uid", "name", "createdAt"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "A bKash or Nagad transaction record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "uid": { "type": "string", "description": "The user ID of the owner." },
+        "partnerId": { "type": "string", "description": "The ID of the partner this transaction belongs to." },
+        "date": { "type": "string", "format": "date" },
+        "amount": { "type": "number" },
+        "service": { "type": "string", "enum": ["bKash", "Nagad"] },
+        "type": { "type": "string", "enum": ["Personal", "Agent"] },
+        "commissionRate": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "note": { "type": "string", "description": "Optional note about the transaction." }
+      },
+      "required": ["id", "uid", "partnerId", "date", "amount", "service", "type", "commissionRate", "createdAt"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "A payment received from a partner.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "uid": { "type": "string", "description": "The user ID of the owner." },
+        "partnerId": { "type": "string", "description": "The ID of the partner who made the payment." },
+        "date": { "type": "string", "format": "date" },
+        "amount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "note": { "type": "string", "description": "Optional note about the payment source." }
+      },
+      "required": ["id", "uid", "partnerId", "date", "amount", "createdAt"]
+    },
+    "Settlement": {
+      "title": "Settlement",
+      "description": "An archived/settled session for a partner comprising transaction summaries and list of items.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "uid": { "type": "string", "description": "The user ID of the owner." },
+        "partnerId": { "type": "string", "description": "The ID of the partner this settlement is for." },
+        "partnerName": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "totalAmount": { "type": "number" },
+        "totalCommission": { "type": "number" },
+        "totalReceived": { "type": "number" },
+        "balance": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "transactions": { "type": "array" },
+        "payments": { "type": "array" }
+      },
+      "required": ["id", "uid", "partnerId", "partnerName", "date", "totalAmount", "totalCommission", "totalReceived", "balance", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/partners/{partnerId}": {
+      "schema": "Partner",
+      "description": "Collection of business partners."
+    },
+    "/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Collection of user transactions."
+    },
+    "/payments/{paymentId}": {
+      "schema": "Payment",
+      "description": "Collection of payments received from partners."
+    },
+    "/settlements/{settlementId}": {
+      "schema": "Settlement",
+      "description": "Collection of archived settlement records."
+    }
+  }
+}

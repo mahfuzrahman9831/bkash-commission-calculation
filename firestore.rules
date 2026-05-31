@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global safety net - default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    match /partners/{partnerId} {
+      allow get: if isAuthenticated() && (resource == null || resource.data.uid == request.auth.uid);
+      allow list: if isAuthenticated() && resource.data.uid == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.uid == request.auth.uid && request.resource.data.uid == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.uid == request.auth.uid;
+    }
+
+    match /transactions/{transactionId} {
+      allow get: if isAuthenticated() && (resource == null || resource.data.uid == request.auth.uid);
+      allow list: if isAuthenticated() && resource.data.uid == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.uid == request.auth.uid && request.resource.data.uid == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.uid == request.auth.uid;
+    }
+
+    match /payments/{paymentId} {
+      allow get: if isAuthenticated() && (resource == null || resource.data.uid == request.auth.uid);
+      allow list: if isAuthenticated() && resource.data.uid == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.uid == request.auth.uid && request.resource.data.uid == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.uid == request.auth.uid;
+    }
+
+    match /settlements/{settlementId} {
+      allow get, list: if isAuthenticated() && (resource == null || !('uid' in resource.data) || resource.data.uid == request.auth.uid);
+      allow create, update, delete: if isAuthenticated() && (request.resource == null || !('uid' in request.resource.data) || request.resource.data.uid == request.auth.uid) && (resource == null || !('uid' in resource.data) || resource.data.uid == request.auth.uid);
+    }
+  }
+}

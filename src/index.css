@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;650;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Hind Siliguri", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Custom Legible Softer Darkish Charcoal Gray Palette for Dark Mode */
+  --color-neutral-950: #141416; /* Screen background */
+  --color-neutral-900: #1e1e22; /* Primary Container/Card cards */
+  --color-neutral-850: #26262a; /* Secondary background components */
+  --color-neutral-805: #2f2f36; /* Dividers/Border outlines in light-dark context */
+  --color-neutral-800: #383842; /* Main dark mode borders */
+  --color-neutral-750: #444450; /* Form field border outlines */
+}
+
+/* Override dark mode variant to use class selector instead of systems preference media queries (Tailwind v4) */
+@variant dark (&:where(.dark, .dark *));
+
+body {
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
